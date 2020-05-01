@@ -73,6 +73,8 @@ browser.browserAction.onClicked.addListener(async tab => {
 
 browser.runtime.onInstalled.addListener(async () => {
   await Promise.all([refreshCachedMerchantsIfNeeded(), createClientIdIfNotExists()]);
+  const tabs = await browser.tabs.query({});
+  await Promise.all(Array.from(tabs, tab => browser.tabs.reload(tab.id)));
 });
 
 async function launchWindowAndListenForEvents({
