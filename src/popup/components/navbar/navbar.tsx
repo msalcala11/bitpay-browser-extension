@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
-import './navbar.scss';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { useTracking } from 'react-tracking';
 import { browser } from 'webextension-polyfill-ts';
 import { motion, AnimatePresence } from 'framer-motion';
 import { resizeFrame, FrameDimensions } from '../../../services/frame';
+import { trackComponent } from '../../../services/analytics';
+import './navbar.scss';
 
 import BitpayLogo from './bp-logo/bp-logo';
 import BackButton from './back-button/back-button';
 
 const Navbar: React.FC<RouteComponentProps> = ({ history, location }) => {
+  const tracking = useTracking();
   const [preCollapseHeight, setPreCollapseHeight] = useState(0);
   const [collapsed, setCollapsed] = useState(false);
   const goBack = (): void => {
@@ -16,17 +19,21 @@ const Navbar: React.FC<RouteComponentProps> = ({ history, location }) => {
       setCollapsed(false);
     }
     history.goBack();
+    tracking.trackEvent({ action: 'clickedBackButton' });
   };
   const collapse = (): void => {
     setPreCollapseHeight(document.body.offsetHeight);
     setCollapsed(true);
     resizeFrame(FrameDimensions.collapsedHeight);
+    tracking.trackEvent({ action: 'collapsedWidget' });
   };
   const expand = (): void => {
     setCollapsed(false);
     resizeFrame(preCollapseHeight);
+    tracking.trackEvent({ action: 'expandedWidget' });
   };
   const close = (): void => {
+    tracking.trackEvent({ action: 'closedWidget' });
     browser.runtime.sendMessage({ name: 'POPUP_CLOSED' });
   };
   const routesWithBackButton = ['/brand', '/card', '/amount', '/payment', '/settings/', '/category'];
@@ -65,4 +72,7 @@ const Navbar: React.FC<RouteComponentProps> = ({ history, location }) => {
   );
 };
 
-export default withRouter(Navbar);
+// // eslint-disable-next-line @typescript-eslint/no-explicit-any
+// export default trackComponent(withRouter(Navbar) as any);
+
+export default withRouter(trackComponent(Navbar));
