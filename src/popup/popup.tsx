@@ -251,11 +251,8 @@ const Popup: React.FC = () => {
   );
 };
 
-export default track(
-  {},
-  {
-    dispatch: event => {
-      console.log('events', event);
-    }
+export default track((arg1, arg2) => console.log('argsss', arg1, arg2), {
+  dispatch: event => {
+    console.log('events', event);
   }
-)(Popup);
+})(Popup);

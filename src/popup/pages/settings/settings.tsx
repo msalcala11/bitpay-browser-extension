@@ -1,4 +1,5 @@
 import React from 'react';
+import track from 'react-tracking';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 import { resizeFrame } from '../../../services/frame';
@@ -7,7 +8,6 @@ import { launchNewTab } from '../../../services/browser';
 import Gravatar from '../../components/gravatar/gravatar';
 import packageJson from '../../../../package.json';
 import './settings.scss';
-import track from 'react-tracking';
 
 const Settings: React.FC<{ email: string; user: BitpayUser }> = ({ email, user }) => {
   resizeFrame(450);

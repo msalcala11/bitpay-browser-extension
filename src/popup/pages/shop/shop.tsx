@@ -173,8 +173,13 @@ const Shop: React.FC<{ directory: Directory; merchants: Merchant[]; location: an
 };
 
 export default track(
-  {
-    page: 'shop'
+  (arg1, arg2) => {
+    console.log('arg1', arg1);
+    console.log('arg2', arg2);
+    console.log('hi');
+    return {
+      page: arg1
+    };
   },
   { dispatchOnMount: true }
 )(Shop);
