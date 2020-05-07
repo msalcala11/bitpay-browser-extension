@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import track from 'react-tracking';
 import './shop.scss';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -171,4 +172,9 @@ const Shop: React.FC<{ directory: Directory; merchants: Merchant[]; location: an
   );
 };
 
-export default Shop;
+export default track(
+  {
+    page: 'Shop'
+  },
+  { dispatchOnMount: true }
+)(Shop);

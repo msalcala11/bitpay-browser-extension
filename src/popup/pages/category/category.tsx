@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import './category.scss';
+import track from 'react-tracking';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import SearchBar from '../../components/search-bar/search-bar';
@@ -9,6 +9,7 @@ import { Merchant } from '../../../services/merchant';
 import { resizeToFitPage } from '../../../services/frame';
 import { wait } from '../../../services/utils';
 import { listAnimation } from '../../../services/animations';
+import './category.scss';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Category: React.FC<{ location: any; merchants: Merchant[] }> = ({ location, merchants }) => {
@@ -131,4 +132,9 @@ const Category: React.FC<{ location: any; merchants: Merchant[] }> = ({ location
   );
 };
 
-export default Category;
+export default track(
+  {
+    page: 'Category'
+  },
+  { dispatchOnMount: true }
+)(Category);

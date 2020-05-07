@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MemoryRouter as Router, Route, Switch } from 'react-router-dom';
+import track from 'react-tracking';
 import { skip } from 'rxjs/operators';
 import Category from './pages/category/category';
 import Brand from './pages/brand/brand';
@@ -250,4 +251,11 @@ const Popup: React.FC = () => {
   );
 };
 
-export default Popup;
+export default track(
+  {},
+  {
+    dispatch: event => {
+      console.log('event', event);
+    }
+  }
+)(Popup);
