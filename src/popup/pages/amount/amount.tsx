@@ -1,6 +1,6 @@
 import React, { useRef, useState, Dispatch, SetStateAction } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import track, { useTracking } from 'react-tracking';
+import { useTracking } from 'react-tracking';
 import { motion } from 'framer-motion';
 import CardDenoms from '../../components/card-denoms/card-denoms';
 import PayWithBitpay from '../../components/pay-with-bitpay/pay-with-bitpay';
@@ -11,8 +11,9 @@ import { Merchant } from '../../../services/merchant';
 import { resizeFrame } from '../../../services/frame';
 import ActionButton from '../../components/action-button/action-button';
 import { BitpayUser } from '../../../services/bitpay-id';
-import './amount.scss';
 import { formatCurrency } from '../../../services/currency';
+import { trackComponent } from '../../../services/analytics';
+import './amount.scss';
 
 const shkAmp = 12;
 
@@ -223,9 +224,4 @@ const Amount: React.FC<RouteComponentProps & {
   );
 };
 
-export default track(
-  {
-    page: 'amount'
-  },
-  { dispatchOnMount: true }
-)(Amount);
+export default trackComponent(Amount, { page: 'Amount' });

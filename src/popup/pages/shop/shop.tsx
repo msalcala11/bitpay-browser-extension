@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import track from 'react-tracking';
-import './shop.scss';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import SearchBar from '../../components/search-bar/search-bar';
@@ -10,6 +8,8 @@ import { Directory } from '../../../services/directory';
 import { resizeToFitPage } from '../../../services/frame';
 import { wait } from '../../../services/utils';
 import { listAnimation } from '../../../services/animations';
+import { trackComponent } from '../../../services/analytics';
+import './shop.scss';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Shop: React.FC<{ directory: Directory; merchants: Merchant[]; location: any }> = ({
@@ -172,14 +172,16 @@ const Shop: React.FC<{ directory: Directory; merchants: Merchant[]; location: an
   );
 };
 
-export default track(
-  (arg1, arg2) => {
-    console.log('arg1', arg1);
-    console.log('arg2', arg2);
-    console.log('hi');
-    return {
-      page: arg1
-    };
-  },
-  { dispatchOnMount: true }
-)(Shop);
+// export default track(
+//   (arg1, arg2) => {
+//     console.log('arg1', arg1);
+//     console.log('arg2', arg2);
+//     console.log('hi');
+//     return {
+//       page: arg1
+//     };
+//   },
+//   { dispatchOnMount: true }
+// )(Shop);
+
+export default trackComponent(Shop, { page: 'shop' });
