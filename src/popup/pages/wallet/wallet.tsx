@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import './wallet.scss';
+import track from 'react-tracking';
 import { GiftCard, CardConfig } from '../../../services/gift-card.types';
 import { Merchant } from '../../../services/merchant';
 import MerchantCta from '../../components/merchant-cta/merchant-cta';
@@ -38,4 +39,9 @@ const Wallet: React.FC<{
   );
 };
 
-export default Wallet;
+export default track(
+  {
+    page: 'wallet'
+  },
+  { dispatchOnMount: true }
+)(Wallet);

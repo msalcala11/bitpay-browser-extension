@@ -134,7 +134,7 @@ const Category: React.FC<{ location: any; merchants: Merchant[] }> = ({ location
 
 export default track(
   {
-    page: 'Category'
+    page: 'category'
   },
   { dispatchOnMount: true }
 )(Category);

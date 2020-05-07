@@ -174,7 +174,7 @@ const Shop: React.FC<{ directory: Directory; merchants: Merchant[]; location: an
 
 export default track(
   {
-    page: 'Shop'
+    page: 'shop'
   },
   { dispatchOnMount: true }
 )(Shop);

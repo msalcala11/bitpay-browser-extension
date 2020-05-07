@@ -255,7 +255,7 @@ export default track(
   {},
   {
     dispatch: event => {
-      console.log('event', event);
+      console.log('events', event);
     }
   }
 )(Popup);

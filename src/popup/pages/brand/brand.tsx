@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { RouteComponentProps, Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
+import track from 'react-tracking';
 import { Merchant, getDiscount } from '../../../services/merchant';
 import { resizeToFitPage, FrameDimensions } from '../../../services/frame';
 import { goToPage } from '../../../services/browser';
@@ -120,4 +121,9 @@ const Brand: React.FC<RouteComponentProps> = ({ location }) => {
   );
 };
 
-export default Brand;
+export default track(
+  {
+    page: 'brand'
+  },
+  { dispatchOnMount: true }
+)(Brand);

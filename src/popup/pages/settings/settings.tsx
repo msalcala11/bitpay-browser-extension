@@ -7,6 +7,7 @@ import { launchNewTab } from '../../../services/browser';
 import Gravatar from '../../components/gravatar/gravatar';
 import packageJson from '../../../../package.json';
 import './settings.scss';
+import track from 'react-tracking';
 
 const Settings: React.FC<{ email: string; user: BitpayUser }> = ({ email, user }) => {
   resizeFrame(450);
@@ -71,4 +72,9 @@ const Settings: React.FC<{ email: string; user: BitpayUser }> = ({ email, user }
   );
 };
 
-export default Settings;
+export default track(
+  {
+    page: 'settings'
+  },
+  { dispatchOnMount: true }
+)(Settings);

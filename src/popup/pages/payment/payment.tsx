@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/no-autofocus */
 import React, { useRef, useEffect, useState, Dispatch, SetStateAction } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import track from 'react-tracking';
 import PayWithBitpay from '../../components/pay-with-bitpay/pay-with-bitpay';
 import { GiftCardInvoiceParams, CardConfig, UnsoldGiftCard, GiftCard } from '../../../services/gift-card.types';
 import LineItems from '../../components/line-items/line-items';
@@ -72,4 +73,9 @@ const Payment: React.FC<RouteComponentProps & {
   );
 };
 
-export default Payment;
+export default track(
+  {
+    page: 'payment'
+  },
+  { dispatchOnMount: true }
+)(Payment);

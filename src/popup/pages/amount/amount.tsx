@@ -225,7 +225,7 @@ const Amount: React.FC<RouteComponentProps & {
 
 export default track(
   {
-    page: 'Amount'
+    page: 'amount'
   },
   { dispatchOnMount: true }
 )(Amount);
