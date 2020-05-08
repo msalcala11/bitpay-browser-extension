@@ -97,7 +97,7 @@ const Shop: React.FC<{ directory: Directory; merchants: Merchant[]; location: an
               <>
                 <div className="shop-page__section-header">Search Results</div>
                 {filteredMerchants.map(merchant => (
-                  <ObservedItem merchant={merchant} />
+                  <ObservedItem merchant={merchant} key={merchant.name} />
                 ))}
                 <div className="shop-page__divider" />
               </>
@@ -139,7 +139,7 @@ const Shop: React.FC<{ directory: Directory; merchants: Merchant[]; location: an
                                 variants={listAnimation}
                                 key={merchant.name}
                               >
-                                <ObservedItem merchant={merchant} />
+                                <ObservedItem merchant={merchant} key={merchant.name} />
                               </motion.div>
                             )}
                           </React.Fragment>
