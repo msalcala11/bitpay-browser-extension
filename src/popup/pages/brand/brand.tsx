@@ -25,7 +25,7 @@ const Brand: React.FC<RouteComponentProps> = ({ location }) => {
   };
   const launchMerchantWebsite = (): void => {
     goToPage(merchant.link);
-    tracking.trackEvent({ action: 'launchedMerchantWebsite', merchant: merchant.name });
+    tracking.trackEvent({ action: 'launchedMerchantWebsite' });
   };
   useEffect((): void => {
     if (!ref.current) return;
