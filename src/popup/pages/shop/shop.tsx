@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useTracking } from 'react-tracking';
 import SearchBar from '../../components/search-bar/search-bar';
 import MerchantCell from '../../components/merchant-cell/merchant-cell';
-import { Merchant } from '../../../services/merchant';
+import { Merchant, getDiscount } from '../../../services/merchant';
 import { Directory } from '../../../services/directory';
 import { resizeToFitPage } from '../../../services/frame';
 import { wait } from '../../../services/utils';
@@ -17,6 +18,7 @@ const Shop: React.FC<{ directory: Directory; merchants: Merchant[]; location: an
   merchants,
   location
 }) => {
+  const tracking = useTracking();
   const ref = useRef<HTMLDivElement>(null);
   const [searchVal, setSearchVal] = useState('' as string);
   const [isDirty, setDirty] = useState(false);
@@ -32,8 +34,11 @@ const Shop: React.FC<{ directory: Directory; merchants: Merchant[]; location: an
       (merchant.name.toLowerCase().includes(searchVal.toLowerCase()) ||
         merchant.tags.find(category => category.includes(searchVal.toLowerCase())))
   );
-  const handleClick = (): void => {
+  const handleClick = (merchant?: Merchant): void => {
     location.state = { scrollTop: ref.current?.scrollTop as number, searchVal };
+    if (merchant && getDiscount(merchant)) {
+      tracking.trackEvent({ action: 'clickedGiftCardDiscount' });
+    }
   };
   useEffect(() => {
     if (searchVal) setDirty(true);
@@ -68,7 +73,7 @@ const Shop: React.FC<{ directory: Directory; merchants: Merchant[]; location: an
                       state: { merchant }
                     }}
                     key={merchant.name}
-                    onClick={handleClick}
+                    onClick={(): void => handleClick(merchant)}
                   >
                     <MerchantCell key={merchant.name} merchant={merchant} />
                   </Link>
@@ -98,7 +103,7 @@ const Shop: React.FC<{ directory: Directory; merchants: Merchant[]; location: an
                               pathname: `/category/${directory.curated[category].displayName}`,
                               state: { curation: directory.curated[category] }
                             }}
-                            onClick={handleClick}
+                            onClick={(): void => handleClick()}
                           >
                             See All
                           </Link>
@@ -119,7 +124,7 @@ const Shop: React.FC<{ directory: Directory; merchants: Merchant[]; location: an
                                     state: { merchant }
                                   }}
                                   key={merchant.name}
-                                  onClick={handleClick}
+                                  onClick={(): void => handleClick(merchant)}
                                 >
                                   <MerchantCell key={merchant.name} merchant={merchant} />
                                 </Link>
@@ -140,7 +145,7 @@ const Shop: React.FC<{ directory: Directory; merchants: Merchant[]; location: an
                       pathname: '/category/all',
                       state: { curation: null, category: null }
                     }}
-                    onClick={handleClick}
+                    onClick={(): void => handleClick()}
                   >
                     See All Brands
                   </Link>
@@ -155,7 +160,7 @@ const Shop: React.FC<{ directory: Directory; merchants: Merchant[]; location: an
                           pathname: `/category/${directory.categories[category].emoji}`,
                           state: { category: directory.categories[category] }
                         }}
-                        onClick={handleClick}
+                        onClick={(): void => handleClick()}
                       >
                         <div className="shop-page__categories__item__icon">{directory.categories[category].emoji}</div>
                         {directory.categories[category].displayName}

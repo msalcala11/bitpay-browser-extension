@@ -1,10 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useTracking } from 'react-tracking';
 import SearchBar from '../../components/search-bar/search-bar';
 import MerchantCell from '../../components/merchant-cell/merchant-cell';
 import { DirectoryCategory, DirectoryCuration } from '../../../services/directory';
-import { Merchant } from '../../../services/merchant';
+import { Merchant, getDiscount } from '../../../services/merchant';
 import { resizeToFitPage } from '../../../services/frame';
 import { wait } from '../../../services/utils';
 import { listAnimation } from '../../../services/animations';
@@ -13,6 +14,7 @@ import './category.scss';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Category: React.FC<{ location: any; merchants: Merchant[] }> = ({ location, merchants }) => {
+  const tracking = useTracking();
   const scrollRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const { category, curation } = location.state as { category?: DirectoryCategory; curation?: DirectoryCuration };
@@ -35,8 +37,11 @@ const Category: React.FC<{ location: any; merchants: Merchant[] }> = ({ location
     if (length > 2) return 50;
     return 0;
   };
-  const handleClick = (): void => {
+  const handleClick = (merchant: Merchant): void => {
     location.state = { scrollTop: scrollRef.current?.scrollTop as number, searchVal, category, curation };
+    if (merchant && getDiscount(merchant)) {
+      tracking.trackEvent({ action: 'clickedGiftCardDiscount' });
+    }
   };
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
@@ -108,7 +113,7 @@ const Category: React.FC<{ location: any; merchants: Merchant[] }> = ({ location
                         state: { merchant, category, curation }
                       }}
                       key={merchant.name}
-                      onClick={handleClick}
+                      onClick={(): void => handleClick(merchant)}
                     >
                       <MerchantCell key={merchant.name} merchant={merchant} />
                     </Link>

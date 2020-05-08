@@ -66,20 +66,12 @@ async function fetchAvailableCardMap({ user }: { user: BitpayUser }): Promise<Av
   return availableCardMap;
 }
 
-function removeDiscountsForNow(cardConfig: CardConfig): CardConfig {
-  return {
-    ...cardConfig
-    // discounts: undefined
-  };
-}
-
 function getCardConfigFromApiConfigMap(availableCardMap: AvailableCardMap): CardConfig[] {
   const cardNames = Object.keys(availableCardMap);
   const availableCards = cardNames
     .filter(cardName => availableCardMap[cardName] && availableCardMap[cardName].length)
     .map(cardName => getCardConfigFromApiBrandConfig(cardName, availableCardMap[cardName]))
     .filter(config => !config.hidden)
-    .map(cardConfig => removeDiscountsForNow(cardConfig))
     .map(cardConfig => ({
       ...cardConfig,
       displayName: cardConfig.displayName || cardConfig.name
