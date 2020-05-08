@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { browser } from 'webextension-polyfill-ts';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTracking } from 'react-tracking';
 import { GiftCard, CardConfig, GiftCardInvoiceParams } from '../../../services/gift-card.types';
 import { set } from '../../../services/storage';
 import { createBitPayInvoice, redeemGiftCard, isAmountValid } from '../../../services/gift-card';
@@ -40,6 +41,7 @@ const PayWithBitpay: React.FC<Partial<RouteComponentProps> & {
   supportedMerchant,
   onInvalidParams = (): void => undefined
 }) => {
+  const tracking = useTracking();
   const [errorMessage, setErrorMessage] = useState('');
   const [awaitingPayment, setAwaitingPayment] = useState(false);
   const { amount, currency } = invoiceParams;
@@ -94,11 +96,17 @@ const PayWithBitpay: React.FC<Partial<RouteComponentProps> & {
       })
     ]);
     if (res.data && res.data.status === 'closed') {
+      tracking.trackEvent({ action: 'closedInvoice' });
       await deleteGiftCard(unredeemedGiftCard);
       setAwaitingPayment(false);
       return;
     }
     const giftCard = await redeemGiftCard(unredeemedGiftCard);
+    tracking.trackEvent({
+      action: 'purchasedGiftCard',
+      cardName: cardConfig.name,
+      transactionCurrency: giftCard.invoice.transactionCurrency
+    });
     const finalGiftCard = {
       ...giftCard,
       discounts: cardConfig.discounts
@@ -112,11 +120,13 @@ const PayWithBitpay: React.FC<Partial<RouteComponentProps> & {
   const snackOnClose = (): void => {
     setErrorMessage('');
   };
-  const payButton = (): Promise<void> =>
-    launchInvoice().catch(err => {
+  const payButton = (): Promise<void> => {
+    tracking.trackEvent({ action: 'clickedPayButton' });
+    return launchInvoice().catch(err => {
       setErrorMessage(err.message || 'An unexpected error occurred');
       setAwaitingPayment(false);
     });
+  };
   return (
     <>
       <div className="pay-with-bitpay">
