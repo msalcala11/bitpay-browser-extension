@@ -169,7 +169,7 @@ const Shop: React.FC<{ directory: Directory; merchants: Merchant[]; location: an
                         className="shop-page__categories__item"
                         key={category}
                         to={{
-                          pathname: `/category/${directory.categories[category].emoji}`,
+                          pathname: `/category/${directory.categories[category].displayName}`,
                           state: { category: directory.categories[category] }
                         }}
                         onClick={(): void => handleClick()}
