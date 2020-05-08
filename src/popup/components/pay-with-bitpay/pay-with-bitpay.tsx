@@ -105,7 +105,7 @@ const PayWithBitpay: React.FC<Partial<RouteComponentProps> & {
     tracking.trackEvent({
       action: 'purchasedGiftCard',
       cardName: cardConfig.name,
-      transactionCurrency: giftCard.invoice.transactionCurrency
+      transactionCurrency: giftCard.invoice?.transactionCurrency
     });
     const finalGiftCard = {
       ...giftCard,

@@ -1,7 +1,7 @@
 import React from 'react';
-import track from 'react-tracking';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
+import { trackComponent } from '../../../services/analytics';
 import { resizeFrame } from '../../../services/frame';
 import { BitpayUser } from '../../../services/bitpay-id';
 import { launchNewTab } from '../../../services/browser';
@@ -72,9 +72,4 @@ const Settings: React.FC<{ email: string; user: BitpayUser }> = ({ email, user }
   );
 };
 
-export default track(
-  {
-    page: 'settings'
-  },
-  { dispatchOnMount: true }
-)(Settings);
+export default trackComponent(Settings, { page: 'settings' });
