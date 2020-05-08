@@ -151,6 +151,9 @@ const Popup: React.FC = () => {
       setUser(bitpayUser);
       setLoaded(true);
       tracking.trackEvent({ action: 'openedWidget' });
+      window.addEventListener('message', message => {
+        console.log('popup message', message);
+      });
     };
     getStartPage();
   }, [tracking]);
