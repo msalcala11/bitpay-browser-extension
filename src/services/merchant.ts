@@ -1,4 +1,4 @@
-import { CardConfig } from './gift-card.types';
+import { CardConfig, GiftCardDiscount } from './gift-card.types';
 import { sortByDisplayName, fetchAvailableCards, addToSupportedGiftCards } from './gift-card';
 import { removeProtocolAndWww } from './utils';
 import { DirectIntegration, fetchDirectIntegrations, Directory, fetchDirectory } from './directory';
@@ -124,10 +124,14 @@ export async function fetchDirectoryAndMerchants(): Promise<[Directory, Merchant
   return Promise.all([fetchDirectory(), fetchMerchants()]);
 }
 
+export function getGiftCardDiscount(merchant: Merchant): GiftCardDiscount | undefined {
+  const cardConfig = merchant.giftCards[0];
+  return cardConfig && cardConfig.discounts && cardConfig.discounts[0];
+}
+
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function getDiscount(merchant: Merchant) {
-  const cardConfig = merchant.giftCards[0];
-  return merchant.discount || (cardConfig && cardConfig.discounts && cardConfig.discounts[0]);
+  return merchant.discount || getGiftCardDiscount(merchant);
 }
 
 export const getDirectIntegrationInitialEntries = (merchant: Merchant): InitialEntry[] => [

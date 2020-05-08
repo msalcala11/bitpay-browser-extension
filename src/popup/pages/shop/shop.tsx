@@ -5,7 +5,7 @@ import { useTracking } from 'react-tracking';
 import Observer from '@researchgate/react-intersection-observer';
 import SearchBar from '../../components/search-bar/search-bar';
 import MerchantCell from '../../components/merchant-cell/merchant-cell';
-import { Merchant, getDiscount } from '../../../services/merchant';
+import { Merchant, getGiftCardDiscount } from '../../../services/merchant';
 import { Directory } from '../../../services/directory';
 import { resizeToFitPage } from '../../../services/frame';
 import { wait } from '../../../services/utils';
@@ -37,7 +37,7 @@ const Shop: React.FC<{ directory: Directory; merchants: Merchant[]; location: an
   );
   const handleClick = (merchant?: Merchant): void => {
     location.state = { scrollTop: ref.current?.scrollTop as number, searchVal };
-    if (merchant && getDiscount(merchant)) {
+    if (merchant && getGiftCardDiscount(merchant)) {
       tracking.trackEvent({ action: 'clickedGiftCardPromo' });
     }
   };
@@ -58,7 +58,7 @@ const Shop: React.FC<{ directory: Directory; merchants: Merchant[]; location: an
   };
   const ObservedItem: React.FC<{ merchant: Merchant }> = ({ merchant }) => (
     <>
-      {getDiscount(merchant) && merchant.giftCards.length ? (
+      {getGiftCardDiscount(merchant) ? (
         <Observer onChange={handleIntersection}>
           <div>
             <MerchantItem merchant={merchant} />
