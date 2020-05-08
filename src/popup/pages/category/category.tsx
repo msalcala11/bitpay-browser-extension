@@ -6,7 +6,7 @@ import Observer from '@researchgate/react-intersection-observer';
 import SearchBar from '../../components/search-bar/search-bar';
 import MerchantCell from '../../components/merchant-cell/merchant-cell';
 import { DirectoryCategory, DirectoryCuration } from '../../../services/directory';
-import { Merchant, getGiftCardDiscount } from '../../../services/merchant';
+import { Merchant, getGiftCardDiscount, getPromoEventParams } from '../../../services/merchant';
 import { resizeToFitPage } from '../../../services/frame';
 import { wait } from '../../../services/utils';
 import { listAnimation } from '../../../services/animations';
@@ -34,8 +34,9 @@ const Category: React.FC<RouteComponentProps & { merchants: Merchant[] }> = ({ l
         merchant.tags.find(tag => tag.includes(searchVal.toLowerCase()))
       : baseSet
   );
-  const handleIntersection = (event: IntersectionObserverEntry): void => {
-    if (event.isIntersecting) tracking.trackEvent({ action: 'presentedWithGiftCardPromo' });
+  const handleIntersection = (merchant: Merchant) => (event: IntersectionObserverEntry): void => {
+    if (event.isIntersecting)
+      tracking.trackEvent({ action: 'presentedWithGiftCardPromo', ...getPromoEventParams(merchant) });
   };
   const resizeSwitch = (length: number): number => {
     if (length > 3) return 100;
@@ -45,7 +46,7 @@ const Category: React.FC<RouteComponentProps & { merchants: Merchant[] }> = ({ l
   const handleClick = (merchant: Merchant): void => {
     location.state = { scrollTop: scrollRef.current?.scrollTop as number, searchVal, category, curation };
     if (getGiftCardDiscount(merchant)) {
-      tracking.trackEvent({ action: 'clickedGiftCardPromo' });
+      tracking.trackEvent({ action: 'clickedGiftCardPromo', ...getPromoEventParams(merchant) });
     }
   };
   useEffect(() => {
@@ -125,7 +126,7 @@ const Category: React.FC<RouteComponentProps & { merchants: Merchant[] }> = ({ l
                     key={merchant.name}
                   >
                     {getGiftCardDiscount(merchant) ? (
-                      <Observer onChange={handleIntersection}>
+                      <Observer onChange={handleIntersection(merchant)}>
                         <div>
                           <ListItem merchant={merchant} />
                         </div>

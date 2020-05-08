@@ -5,7 +5,7 @@ import { useTracking } from 'react-tracking';
 import Observer from '@researchgate/react-intersection-observer';
 import SearchBar from '../../components/search-bar/search-bar';
 import MerchantCell from '../../components/merchant-cell/merchant-cell';
-import { Merchant, getGiftCardDiscount } from '../../../services/merchant';
+import { Merchant, getGiftCardDiscount, getPromoEventParams } from '../../../services/merchant';
 import { Directory } from '../../../services/directory';
 import { resizeToFitPage } from '../../../services/frame';
 import { wait } from '../../../services/utils';
@@ -38,7 +38,7 @@ const Shop: React.FC<{ directory: Directory; merchants: Merchant[]; location: an
   const handleClick = (merchant?: Merchant): void => {
     location.state = { scrollTop: ref.current?.scrollTop as number, searchVal };
     if (merchant && getGiftCardDiscount(merchant)) {
-      tracking.trackEvent({ action: 'clickedGiftCardPromo' });
+      tracking.trackEvent({ action: 'clickedGiftCardPromo', ...getPromoEventParams(merchant) });
     }
   };
   const MerchantItem: React.FC<{ merchant: Merchant }> = ({ merchant }) => (
@@ -53,13 +53,14 @@ const Shop: React.FC<{ directory: Directory; merchants: Merchant[]; location: an
       <MerchantCell key={merchant.name} merchant={merchant} />
     </Link>
   );
-  const handleIntersection = (event: IntersectionObserverEntry): void => {
-    if (event.isIntersecting) tracking.trackEvent({ action: 'presentedWithGiftCardPromo' });
+  const handleIntersection = (merchant: Merchant) => (event: IntersectionObserverEntry): void => {
+    if (event.isIntersecting)
+      tracking.trackEvent({ action: 'presentedWithGiftCardPromo', ...getPromoEventParams(merchant) });
   };
   const ObservedItem: React.FC<{ merchant: Merchant }> = ({ merchant }) => (
     <>
       {getGiftCardDiscount(merchant) ? (
-        <Observer onChange={handleIntersection}>
+        <Observer onChange={handleIntersection(merchant)}>
           <div>
             <MerchantItem merchant={merchant} />
           </div>

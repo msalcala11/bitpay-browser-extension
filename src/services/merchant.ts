@@ -1,5 +1,10 @@
 import { CardConfig, GiftCardDiscount } from './gift-card.types';
-import { sortByDisplayName, fetchAvailableCards, addToSupportedGiftCards } from './gift-card';
+import {
+  sortByDisplayName,
+  fetchAvailableCards,
+  addToSupportedGiftCards,
+  getGiftCardPromoEventParams
+} from './gift-card';
 import { removeProtocolAndWww } from './utils';
 import { DirectIntegration, fetchDirectIntegrations, Directory, fetchDirectory } from './directory';
 import { get, set } from './storage';
@@ -187,3 +192,9 @@ export const getMerchantInitialEntries = ({
     : [{ pathname, state }];
   return entries;
 };
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export function getPromoEventParams(merchant: Merchant) {
+  const cardConfig = merchant.giftCards[0];
+  return getGiftCardPromoEventParams(cardConfig);
+}

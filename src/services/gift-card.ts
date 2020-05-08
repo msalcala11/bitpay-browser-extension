@@ -172,3 +172,14 @@ export const getLatestBalanceEntry = (card: GiftCard): GiftCardBalanceEntry =>
   (card.balanceHistory || []).sort(sortByDescendingDate)[0] || { date: card.date, amount: card.amount };
 
 export const getLatestBalance = (card: GiftCard): number => getLatestBalanceEntry(card).amount;
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export function getGiftCardPromoEventParams(promotedCard: CardConfig) {
+  const discount = (promotedCard.discounts && promotedCard.discounts[0]) as GiftCardDiscount;
+  return {
+    brand: promotedCard.name,
+    promoName: discount.code,
+    promoType: discount.type,
+    discountAmount: discount.amount
+  };
+}
