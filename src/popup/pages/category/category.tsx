@@ -45,7 +45,7 @@ const Category: React.FC<RouteComponentProps & { merchants: Merchant[] }> = ({ l
   const handleClick = (merchant: Merchant): void => {
     location.state = { scrollTop: scrollRef.current?.scrollTop as number, searchVal, category, curation };
     if (merchant && getDiscount(merchant)) {
-      tracking.trackEvent({ action: 'clickedGiftCardDiscount' });
+      tracking.trackEvent({ action: 'clickedGiftCardPromo' });
     }
   };
   useEffect(() => {
