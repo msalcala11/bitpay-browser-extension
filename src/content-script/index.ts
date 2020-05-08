@@ -66,7 +66,7 @@ function createIframe({ merchant }: { merchant?: Merchant }): HTMLIFrameElement 
         const innerFrame = document.querySelector('iframe');
         window.addEventListener('message', (message) => {
           const contentWindow = innerFrame && innerFrame.contentWindow;
-          if(contentWindow) {
+          if(contentWindow && message.data && message.data.message === 'draggedWidget') {
             contentWindow.postMessage(message.data, '*');
           }
         })

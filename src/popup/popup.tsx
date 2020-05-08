@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MemoryRouter as Router, Route, Switch } from 'react-router-dom';
 import track, { useTracking } from 'react-tracking';
-import { skip, debounceTime, filter } from 'rxjs/operators';
+import { skip, debounceTime } from 'rxjs/operators';
 import { fromEvent } from 'rxjs';
 import Category from './pages/category/category';
 import Brand from './pages/brand/brand';
@@ -153,10 +153,7 @@ const Popup: React.FC = () => {
       setLoaded(true);
       tracking.trackEvent({ action: 'openedWidget' });
       fromEvent<MessageEvent>(window, 'message')
-        .pipe(
-          filter(messageEvent => messageEvent.data && messageEvent.data.message === 'draggedWidget'),
-          debounceTime(1000)
-        )
+        .pipe(debounceTime(1000))
         .subscribe(() => tracking.trackEvent({ action: 'draggedWidget' }));
     };
     getStartPage();
