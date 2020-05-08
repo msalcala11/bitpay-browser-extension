@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTracking } from 'react-tracking';
+import Observer from '@researchgate/react-intersection-observer';
 import SearchBar from '../../components/search-bar/search-bar';
 import MerchantCell from '../../components/merchant-cell/merchant-cell';
 import { Merchant, getDiscount } from '../../../services/merchant';
@@ -40,6 +41,34 @@ const Shop: React.FC<{ directory: Directory; merchants: Merchant[]; location: an
       tracking.trackEvent({ action: 'clickedGiftCardDiscount' });
     }
   };
+  const MerchantItem: React.FC<{ merchant: Merchant }> = ({ merchant }) => (
+    <Link
+      to={{
+        pathname: `/brand/${merchant.name}`,
+        state: { merchant }
+      }}
+      key={merchant.name}
+      onClick={(): void => handleClick(merchant)}
+    >
+      <MerchantCell key={merchant.name} merchant={merchant} />
+    </Link>
+  );
+  const handleIntersection = (event: IntersectionObserverEntry): void => {
+    if (event.isIntersecting) tracking.trackEvent({ action: 'presentedWithGiftCardDiscount' });
+  };
+  const ObservedItem: React.FC<{ merchant: Merchant }> = ({ merchant }) => (
+    <>
+      {getDiscount(merchant) && merchant.giftCards.length ? (
+        <Observer onChange={handleIntersection}>
+          <div>
+            <MerchantItem merchant={merchant} />
+          </div>
+        </Observer>
+      ) : (
+        <MerchantItem merchant={merchant} />
+      )}
+    </>
+  );
   useEffect(() => {
     if (searchVal) setDirty(true);
   }, [searchVal]);
@@ -67,16 +96,7 @@ const Shop: React.FC<{ directory: Directory; merchants: Merchant[]; location: an
               <>
                 <div className="shop-page__section-header">Search Results</div>
                 {filteredMerchants.map(merchant => (
-                  <Link
-                    to={{
-                      pathname: `/brand/${merchant.name}`,
-                      state: { merchant }
-                    }}
-                    key={merchant.name}
-                    onClick={(): void => handleClick(merchant)}
-                  >
-                    <MerchantCell key={merchant.name} merchant={merchant} />
-                  </Link>
+                  <ObservedItem merchant={merchant} />
                 ))}
                 <div className="shop-page__divider" />
               </>
@@ -118,16 +138,7 @@ const Shop: React.FC<{ directory: Directory; merchants: Merchant[]; location: an
                                 variants={listAnimation}
                                 key={merchant.name}
                               >
-                                <Link
-                                  to={{
-                                    pathname: `/brand/${merchant.name}`,
-                                    state: { merchant }
-                                  }}
-                                  key={merchant.name}
-                                  onClick={(): void => handleClick(merchant)}
-                                >
-                                  <MerchantCell key={merchant.name} merchant={merchant} />
-                                </Link>
+                                <ObservedItem merchant={merchant} />
                               </motion.div>
                             )}
                           </React.Fragment>
