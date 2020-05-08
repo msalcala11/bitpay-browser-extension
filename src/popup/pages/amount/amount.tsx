@@ -1,4 +1,4 @@
-import React, { useRef, useState, Dispatch, SetStateAction } from 'react';
+import React, { useRef, useState, Dispatch, SetStateAction, useEffect } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { useTracking } from 'react-tracking';
 import { motion } from 'framer-motion';
@@ -50,6 +50,9 @@ const Amount: React.FC<RouteComponentProps & {
       ? formatCurrency(preloadedAmount, cardConfig.currency, { customPrecision: 'minimal' }).replace(/[^\d.-]/g, '')
       : ''
   );
+  useEffect(() => {
+    if (initialAmount) tracking.trackEvent({ action: 'autofilledAmount' });
+  }, [tracking, initialAmount]);
   const [inputError, setInputError] = useState(false);
   const [inputDirty, setInputDirty] = useState(false);
   const discount = (cardConfig.discounts || [])[0];
