@@ -54,7 +54,7 @@ const Shop: React.FC<{ directory: Directory; merchants: Merchant[]; location: an
     </Link>
   );
   const handleIntersection = (event: IntersectionObserverEntry): void => {
-    if (event.isIntersecting) tracking.trackEvent({ action: 'presentedWithGiftCardDiscount' });
+    if (event.isIntersecting) tracking.trackEvent({ action: 'presentedWithGiftCardPromo' });
   };
   const ObservedItem: React.FC<{ merchant: Merchant }> = ({ merchant }) => (
     <>
