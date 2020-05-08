@@ -1,12 +1,12 @@
 import React, { useRef, useEffect } from 'react';
 import './wallet.scss';
-import track from 'react-tracking';
 import { GiftCard, CardConfig } from '../../../services/gift-card.types';
 import { Merchant } from '../../../services/merchant';
 import MerchantCta from '../../components/merchant-cta/merchant-cta';
 import WalletCards from '../../components/wallet-cards/wallet-cards';
 import { sortByDescendingDate } from '../../../services/gift-card';
 import { resizeToFitPage } from '../../../services/frame';
+import { trackComponent } from '../../../services/analytics';
 
 const Wallet: React.FC<{
   supportedMerchant?: Merchant;
@@ -39,9 +39,4 @@ const Wallet: React.FC<{
   );
 };
 
-export default track(
-  {
-    page: 'wallet'
-  },
-  { dispatchOnMount: true }
-)(Wallet);
+export default trackComponent(Wallet, { page: 'wallet' });
