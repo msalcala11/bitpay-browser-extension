@@ -23,6 +23,10 @@ const Brand: React.FC<RouteComponentProps> = ({ location }) => {
     setTextExpanded(true);
     tracking.trackEvent({ action: 'expandedText' });
   };
+  const launchMerchantWebsite = (): void => {
+    goToPage(merchant.link);
+    tracking.trackEvent({ action: 'launchedMerchantWebsite', merchant: merchant.name });
+  };
   useEffect((): void => {
     if (!ref.current) return;
     resizeToFitPage(ref, merchant.cta || merchant.giftCards[0] ? ctaHeight : 50);
@@ -44,11 +48,7 @@ const Brand: React.FC<RouteComponentProps> = ({ location }) => {
         <div className="brand-page__header">
           <div className="brand-page__header__icon--wrapper">
             <img className="brand-page__header__icon" alt={merchant.displayName} src={merchant.icon} />
-            <button
-              className="brand-page__header__icon--hover"
-              onClick={(): void => goToPage(merchant.link)}
-              type="button"
-            >
+            <button className="brand-page__header__icon--hover" onClick={launchMerchantWebsite} type="button">
               <img alt="go to website" src="../assets/icons/link-icon.svg" />
             </button>
           </div>
