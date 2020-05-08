@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { useTracking } from 'react-tracking';
 import { browser } from 'webextension-polyfill-ts';
 import { motion, AnimatePresence } from 'framer-motion';
+import { fromEvent } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 import { resizeFrame, FrameDimensions } from '../../../services/frame';
 import { trackComponent } from '../../../services/analytics';
 import './navbar.scss';
@@ -38,6 +40,11 @@ const Navbar: React.FC<RouteComponentProps> = ({ history, location }) => {
   };
   const routesWithBackButton = ['/brand', '/card', '/amount', '/payment', '/settings/', '/category'];
   const showBackButton = routesWithBackButton.some(route => location.pathname.startsWith(route));
+  useEffect(() => {
+    fromEvent<MessageEvent>(window, 'message')
+      .pipe(debounceTime(1000))
+      .subscribe(() => tracking.trackEvent({ action: 'draggedWidget' }));
+  }, [tracking]);
   return (
     <div className="header-bar fixed">
       <AnimatePresence>{showBackButton && <BackButton onClick={goBack} />}</AnimatePresence>
@@ -71,8 +78,5 @@ const Navbar: React.FC<RouteComponentProps> = ({ history, location }) => {
     </div>
   );
 };
-
-// // eslint-disable-next-line @typescript-eslint/no-explicit-any
-// export default trackComponent(withRouter(Navbar) as any);
 
 export default withRouter(trackComponent(Navbar));
