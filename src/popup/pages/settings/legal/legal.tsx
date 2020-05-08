@@ -1,5 +1,6 @@
 import React from 'react';
 import { launchNewTab } from '../../../../services/browser';
+import { trackComponent } from '../../../../services/analytics';
 
 const Legal: React.FC = () => (
   <div className="settings">
@@ -23,4 +24,4 @@ const Legal: React.FC = () => (
   </div>
 );
 
-export default Legal;
+export default trackComponent(Legal, { page: 'legal' });
