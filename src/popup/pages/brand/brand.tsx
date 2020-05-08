@@ -1,27 +1,33 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { RouteComponentProps, Link } from 'react-router-dom';
+import { useTracking } from 'react-tracking';
 import ReactMarkdown from 'react-markdown';
-import track from 'react-tracking';
 import { Merchant, getDiscount } from '../../../services/merchant';
 import { resizeToFitPage, FrameDimensions } from '../../../services/frame';
 import { goToPage } from '../../../services/browser';
 import CardDenoms from '../../components/card-denoms/card-denoms';
 import ActionButton from '../../components/action-button/action-button';
 import DiscountText from '../../components/discount-text/discount-text';
+import { trackComponent } from '../../../services/analytics';
 import './brand.scss';
 
 const Brand: React.FC<RouteComponentProps> = ({ location }) => {
+  const tracking = useTracking();
   const ref = useRef<HTMLDivElement>(null);
   const { merchant } = location.state as { merchant: Merchant };
   const initiallyExpanded = merchant.hasDirectIntegration && merchant.instructions.length < 300;
-  const [expandText, setExpandText] = useState(initiallyExpanded);
+  const [textExpanded, setTextExpanded] = useState(initiallyExpanded);
   const [pageHeight, setPageHeight] = useState(0);
   const ctaHeight = 125;
+  const expandText = (): void => {
+    setTextExpanded(true);
+    tracking.trackEvent({ action: 'expandedText' });
+  };
   useEffect((): void => {
     if (!ref.current) return;
     resizeToFitPage(ref, merchant.cta || merchant.giftCards[0] ? ctaHeight : 50);
     setPageHeight(ref.current.scrollHeight);
-  }, [ref, merchant, expandText]);
+  }, [ref, merchant, textExpanded]);
   const cardConfig = merchant.giftCards[0];
   if (cardConfig && !cardConfig.description) {
     cardConfig.description = cardConfig.terms;
@@ -69,7 +75,7 @@ const Brand: React.FC<RouteComponentProps> = ({ location }) => {
             </div>
             <div
               className={`brand-page__body__content__text${
-                expandText ? ' brand-page__body__content__text--expand' : ''
+                textExpanded ? ' brand-page__body__content__text--expand' : ''
               }`}
             >
               {merchant.hasDirectIntegration ? (
@@ -79,18 +85,14 @@ const Brand: React.FC<RouteComponentProps> = ({ location }) => {
                   <ReactMarkdown source={cardConfig.description} linkTarget="_blank" />
                 </>
               )}
-              {!expandText && (
-                <button
-                  type="button"
-                  onClick={(): void => setExpandText(true)}
-                  className="brand-page__body__content__text--action"
-                >
+              {!textExpanded && (
+                <button type="button" onClick={expandText} className="brand-page__body__content__text--action">
                   more
                 </button>
               )}
             </div>
           </div>
-          {expandText && cardConfig && cardConfig.terms && (
+          {textExpanded && cardConfig && cardConfig.terms && (
             <>
               <div className="brand-page__body__divider" />
               <div className="brand-page__body__content">
@@ -121,9 +123,4 @@ const Brand: React.FC<RouteComponentProps> = ({ location }) => {
   );
 };
 
-export default track(
-  {
-    page: 'brand'
-  },
-  { dispatchOnMount: true }
-)(Brand);
+export default trackComponent(Brand, { page: 'brand' });

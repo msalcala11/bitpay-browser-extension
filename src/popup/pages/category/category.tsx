@@ -1,5 +1,4 @@
 import React, { useRef, useState, useEffect } from 'react';
-import track from 'react-tracking';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import SearchBar from '../../components/search-bar/search-bar';
@@ -9,6 +8,7 @@ import { Merchant } from '../../../services/merchant';
 import { resizeToFitPage } from '../../../services/frame';
 import { wait } from '../../../services/utils';
 import { listAnimation } from '../../../services/animations';
+import { trackComponent } from '../../../services/analytics';
 import './category.scss';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -132,9 +132,4 @@ const Category: React.FC<{ location: any; merchants: Merchant[] }> = ({ location
   );
 };
 
-export default track(
-  {
-    page: 'category'
-  },
-  { dispatchOnMount: true }
-)(Category);
+export default trackComponent(Category, { page: 'category' });
