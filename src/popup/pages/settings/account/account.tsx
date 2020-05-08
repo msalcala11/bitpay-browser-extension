@@ -1,5 +1,6 @@
 import './account.scss';
 import React, { useRef, useEffect, Dispatch, SetStateAction, useState } from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import { useTracking } from 'react-tracking';
 import { browser } from 'webextension-polyfill-ts';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -18,11 +19,9 @@ import { SignInWithBitpayImage } from '../../../components/svg/sign-in-with-bitp
 import Gravatar from '../../../components/gravatar/gravatar';
 import { trackComponent } from '../../../../services/analytics';
 
-const Account: React.FC<{
+const Account: React.FC<RouteComponentProps & {
   user?: BitpayUser;
   setUser: Dispatch<SetStateAction<BitpayUser | undefined>>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  history: any;
 }> = ({ user, setUser, history }) => {
   const tracking = useTracking();
   const ref = useRef<HTMLDivElement>(null);
