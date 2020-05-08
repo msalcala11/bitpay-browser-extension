@@ -27,6 +27,11 @@ const Brand: React.FC<RouteComponentProps> = ({ location }) => {
     goToPage(merchant.link);
     tracking.trackEvent({ action: 'launchedMerchantWebsite' });
   };
+  const handleMerchantCtaClick = (): void => {
+    if (!merchant.cta) return;
+    goToPage(merchant.cta.link);
+    tracking.trackEvent({ action: 'clickedMerchantCta', merchant: merchant.name });
+  };
   useEffect((): void => {
     if (!ref.current) return;
     resizeToFitPage(ref, merchant.cta || merchant.giftCards[0] ? ctaHeight : 50);
@@ -108,9 +113,7 @@ const Brand: React.FC<RouteComponentProps> = ({ location }) => {
         {(merchant.cta || cardConfig) && (
           <div className="action-button__footer--fixed">
             {merchant.hasDirectIntegration && merchant.cta ? (
-              <ActionButton onClick={(): void => merchant.cta && goToPage(merchant.cta.link)}>
-                {merchant.cta.displayText}
-              </ActionButton>
+              <ActionButton onClick={handleMerchantCtaClick}>{merchant.cta.displayText}</ActionButton>
             ) : (
               <Link to={{ pathname: `/amount/${cardConfig.name}`, state: { cardConfig, merchant } }}>
                 <ActionButton>Buy Credits</ActionButton>
