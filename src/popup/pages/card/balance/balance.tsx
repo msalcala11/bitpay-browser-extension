@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/no-autofocus */
 import React, { useRef, useState, useEffect } from 'react';
 import { useTracking } from 'react-tracking';
+import { RouteComponentProps } from 'react-router-dom';
 import { resizeToFitPage } from '../../../../services/frame';
 import { GiftCard, CardConfig } from '../../../../services/gift-card.types';
 import CardHeader from '../../../components/card-header/card-header';
@@ -12,12 +13,8 @@ import CardMenu from '../../../components/card-menu/card-menu';
 import ActionButton from '../../../components/action-button/action-button';
 import { trackComponent } from '../../../../services/analytics';
 
-const Balance: React.FC<{
+const Balance: React.FC<RouteComponentProps & {
   updateGiftCard: (cards: GiftCard) => void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  history: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  location: any;
 }> = ({ location, history, updateGiftCard }) => {
   const tracking = useTracking();
   const ref = useRef<HTMLDivElement>(null);
