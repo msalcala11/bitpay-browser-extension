@@ -63,8 +63,12 @@ function createIframe({ merchant }: { merchant?: Merchant }): HTMLIFrameElement 
         <iframe src="${innerFrameSrc}" style="${innerFrameStyles}">frameSrc</iframe>
       </body>
       <script>
+        const innerFrame = document.querySelector('iframe');
         window.addEventListener('message', (message) => {
-          console.log('message received in outerframe', message);
+          const contentWindow = innerFrame && innerFrame.contentWindow;
+          if(contentWindow) {
+            contentWindow.postMessage(message.data, '*');
+          }
         })
       </script>
     </html>
@@ -152,11 +156,9 @@ browser.runtime.onMessage.addListener(async message => {
     case 'POPUP_RESIZED':
       return iframe && resizeIframe(iframe, message.height);
     case 'RESET_FRAME_POSITION':
-      if (iframe && iframe.contentWindow)
-        iframe.contentWindow.postMessage(
-          { message: 'widgetDragged' },
-          'chrome-extension://hinkecoomhfennfddlhlgfokjelmiogn'
-        );
+      // eslint-disable-next-line no-case-declarations
+      const contentWindow = iframe && iframe.contentWindow;
+      if (contentWindow) contentWindow.postMessage({ message: 'draggedWidget' }, '*');
       return iframe && resetIframePosition(iframe, message.top, message.left);
     default:
       console.log('Unsupported Event:', message);

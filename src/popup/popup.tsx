@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MemoryRouter as Router, Route, Switch } from 'react-router-dom';
 import track, { useTracking } from 'react-tracking';
-import { skip } from 'rxjs/operators';
+import { skip, debounceTime, filter } from 'rxjs/operators';
+import { fromEvent } from 'rxjs';
 import Category from './pages/category/category';
 import Brand from './pages/brand/brand';
 import Card from './pages/card/card';
@@ -151,9 +152,12 @@ const Popup: React.FC = () => {
       setUser(bitpayUser);
       setLoaded(true);
       tracking.trackEvent({ action: 'openedWidget' });
-      window.addEventListener('message', message => {
-        console.log('popup message', message);
-      });
+      fromEvent<MessageEvent>(window, 'message')
+        .pipe(
+          filter(messageEvent => messageEvent.data && messageEvent.data.message === 'draggedWidget'),
+          debounceTime(1000)
+        )
+        .subscribe(() => tracking.trackEvent({ action: 'draggedWidget' }));
     };
     getStartPage();
   }, [tracking]);
