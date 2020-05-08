@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTracking } from 'react-tracking';
 import Observer from '@researchgate/react-intersection-observer';
@@ -14,10 +14,11 @@ import { trackComponent } from '../../../services/analytics';
 import './category.scss';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Category: React.FC<{ location: any; merchants: Merchant[] }> = ({ location, merchants }) => {
+const Category: React.FC<RouteComponentProps & { merchants: Merchant[] }> = ({ location, merchants }) => {
   const tracking = useTracking();
   const scrollRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const { searchVal: searchValue, scrollTop } = location.state as { searchVal: string; scrollTop: number };
   const { category, curation } = location.state as { category?: DirectoryCategory; curation?: DirectoryCuration };
   const [searchVal, setSearchVal] = useState('' as string);
   const [isDirty, setDirty] = useState(false);
@@ -67,9 +68,9 @@ const Category: React.FC<{ location: any; merchants: Merchant[] }> = ({ location
   useEffect(() => {
     const setScrollPositionAndSearchVal = async (): Promise<void> => {
       if (location.state) {
-        if (location.state.searchVal) setSearchVal(location.state.searchVal);
+        if (searchValue) setSearchVal(searchValue);
         await wait(renderList.length > 24 ? 400 : 0);
-        if (scrollRef.current) scrollRef.current.scrollTop = location.state.scrollTop || 0;
+        if (scrollRef.current) scrollRef.current.scrollTop = scrollTop || 0;
       }
     };
     resizeToFitPage(contentRef);
@@ -79,6 +80,18 @@ const Category: React.FC<{ location: any; merchants: Merchant[] }> = ({ location
   useEffect(() => {
     resizeToFitPage(contentRef, resizeSwitch(renderList.length));
   }, [searchVal, renderList]);
+  const ListItem: React.FC<{ merchant: Merchant }> = ({ merchant }) => (
+    <Link
+      to={{
+        pathname: `/brand/${merchant.name}`,
+        state: { merchant, category, curation }
+      }}
+      key={merchant.name}
+      onClick={(): void => handleClick(merchant)}
+    >
+      <MerchantCell key={merchant.name} merchant={merchant} />
+    </Link>
+  );
   return (
     <div className="category-page" ref={scrollRef}>
       <SearchBar output={setSearchVal} value={searchVal} />
@@ -106,35 +119,19 @@ const Category: React.FC<{ location: any; merchants: Merchant[] }> = ({ location
                 {renderList.map((merchant, index) => (
                   <motion.div
                     custom={index}
-                    initial={index > 7 || location.state.scrollTop > 0 || isDirty ? 'base' : 'delta'}
+                    initial={index > 7 || scrollTop > 0 || isDirty ? 'base' : 'delta'}
                     animate="base"
                     variants={listAnimation}
                     key={merchant.name}
                   >
                     {getDiscount(merchant) && merchant.giftCards.length ? (
                       <Observer onChange={handleIntersection}>
-                        <Link
-                          to={{
-                            pathname: `/brand/${merchant.name}`,
-                            state: { merchant, category, curation }
-                          }}
-                          key={merchant.name}
-                          onClick={(): void => handleClick(merchant)}
-                        >
-                          <MerchantCell key={merchant.name} merchant={merchant} />
-                        </Link>
+                        <div>
+                          <ListItem merchant={merchant} />
+                        </div>
                       </Observer>
                     ) : (
-                      <Link
-                        to={{
-                          pathname: `/brand/${merchant.name}`,
-                          state: { merchant, category, curation }
-                        }}
-                        key={merchant.name}
-                        onClick={(): void => handleClick(merchant)}
-                      >
-                        <MerchantCell key={merchant.name} merchant={merchant} />
-                      </Link>
+                      <ListItem merchant={merchant} />
                     )}
                   </motion.div>
                 ))}
