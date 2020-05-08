@@ -121,6 +121,7 @@ const PayWithBitpay: React.FC<Partial<RouteComponentProps> & {
     showCard(finalGiftCard);
     if (finalGiftCard.status === 'SUCCESS' && cardConfig.cssSelectors && onMerchantWebsite) {
       injectClaimInfo(cardConfig, { claimCode: finalGiftCard.claimCode, pin: finalGiftCard.pin });
+      tracking.trackEvent({ action: 'autofilledClaimInfo', brand: cardConfig.name });
     }
   };
   const snackOnClose = (): void => {

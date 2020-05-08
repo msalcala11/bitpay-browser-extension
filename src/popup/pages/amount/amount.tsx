@@ -51,8 +51,8 @@ const Amount: React.FC<RouteComponentProps & {
       : ''
   );
   useEffect(() => {
-    if (initialAmount) tracking.trackEvent({ action: 'autofilledAmount' });
-  }, [tracking, initialAmount]);
+    if (initialAmount) tracking.trackEvent({ action: 'autofilledAmount', brand: cardConfig.name });
+  }, [tracking, initialAmount, cardConfig]);
   const [inputError, setInputError] = useState(false);
   const [inputDirty, setInputDirty] = useState(false);
   const discount = (cardConfig.discounts || [])[0];
