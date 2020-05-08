@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTracking } from 'react-tracking';
+import Observer from '@researchgate/react-intersection-observer';
 import SearchBar from '../../components/search-bar/search-bar';
 import MerchantCell from '../../components/merchant-cell/merchant-cell';
 import { DirectoryCategory, DirectoryCuration } from '../../../services/directory';
@@ -32,6 +33,9 @@ const Category: React.FC<{ location: any; merchants: Merchant[] }> = ({ location
         merchant.tags.find(tag => tag.includes(searchVal.toLowerCase()))
       : baseSet
   );
+  const handleIntersection = (event: IntersectionObserverEntry): void => {
+    if (event.isIntersecting) tracking.trackEvent({ action: 'presentedWithGiftCardDiscount' });
+  };
   const resizeSwitch = (length: number): number => {
     if (length > 3) return 100;
     if (length > 2) return 50;
@@ -107,16 +111,31 @@ const Category: React.FC<{ location: any; merchants: Merchant[] }> = ({ location
                     variants={listAnimation}
                     key={merchant.name}
                   >
-                    <Link
-                      to={{
-                        pathname: `/brand/${merchant.name}`,
-                        state: { merchant, category, curation }
-                      }}
-                      key={merchant.name}
-                      onClick={(): void => handleClick(merchant)}
-                    >
-                      <MerchantCell key={merchant.name} merchant={merchant} />
-                    </Link>
+                    {getDiscount(merchant) && merchant.giftCards.length ? (
+                      <Observer onChange={handleIntersection}>
+                        <Link
+                          to={{
+                            pathname: `/brand/${merchant.name}`,
+                            state: { merchant, category, curation }
+                          }}
+                          key={merchant.name}
+                          onClick={(): void => handleClick(merchant)}
+                        >
+                          <MerchantCell key={merchant.name} merchant={merchant} />
+                        </Link>
+                      </Observer>
+                    ) : (
+                      <Link
+                        to={{
+                          pathname: `/brand/${merchant.name}`,
+                          state: { merchant, category, curation }
+                        }}
+                        key={merchant.name}
+                        onClick={(): void => handleClick(merchant)}
+                      >
+                        <MerchantCell key={merchant.name} merchant={merchant} />
+                      </Link>
+                    )}
                   </motion.div>
                 ))}
               </>
