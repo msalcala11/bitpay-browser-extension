@@ -140,7 +140,6 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
     case 'REFRESH_MERCHANT_CACHE':
       return refreshCachedMerchants();
     case 'TRACK':
-      console.log('received event', message.event);
       return sendEventToGa(message.event);
     case 'URL_CHANGED':
       return handleUrlChange(message.url);
