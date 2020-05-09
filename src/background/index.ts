@@ -1,5 +1,6 @@
 import { browser, Tabs } from 'webextension-polyfill-ts';
 import * as uuid from 'uuid';
+import { sendEventToGa } from '../services/analytics';
 import { GiftCardInvoiceMessage } from '../services/gift-card.types';
 import {
   isBitPayAccepted,
@@ -138,6 +139,9 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
       });
     case 'REFRESH_MERCHANT_CACHE':
       return refreshCachedMerchants();
+    case 'TRACK':
+      console.log('received event', message.event);
+      return sendEventToGa(message.event);
     case 'URL_CHANGED':
       return handleUrlChange(message.url);
     default:

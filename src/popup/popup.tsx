@@ -38,6 +38,7 @@ import Account from './pages/settings/account/account';
 import { refreshMerchantCache } from '../services/browser';
 import { Directory, saturateDirectory } from '../services/directory';
 import './styles.scss';
+import { dispatchEvent } from '../services/analytics';
 
 const Popup: React.FC = () => {
   const tracking = useTracking();
@@ -253,8 +254,9 @@ const Popup: React.FC = () => {
   );
 };
 
-export default track((arg1, arg2) => console.log('argsss', arg1, arg2), {
-  dispatch: event => {
-    console.log('events', event);
+export default track(
+  {},
+  {
+    dispatch: event => dispatchEvent(event)
   }
-})(Popup);
+)(Popup);

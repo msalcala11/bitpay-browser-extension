@@ -146,7 +146,12 @@ module.exports = {
     }),
     new CspHtmlWebpackPlugin(
       {
-        'default-src': ["'self'", dotEnv.definitions['process.env.API_ORIGIN'].replace(/"/g, '')],
+        'default-src': [
+          "'self'",
+          dotEnv.definitions['process.env.API_ORIGIN'].replace(/"/g, ''),
+          'https://www.google-analytics.com',
+          'https://ssl.google-analytics.com'
+        ],
         'base-uri': "'self'",
         'img-src': [
           'https://gravatar.com',
@@ -155,7 +160,16 @@ module.exports = {
         ],
         'font-src': ['https://fonts.gstatic.com'],
         'object-src': "'none'",
-        'script-src': process.env.NODE_ENV === 'production' ? ["'self'"] : ["'self'", "'unsafe-eval'"],
+        'script-src':
+          process.env.NODE_ENV === 'production'
+            ? ["'self'", 'https://www.google-analytics.com']
+            : [
+                "'self'",
+                'https://www.google-analytics.com',
+                'https://ssl.google-analytics.com',
+                "'unsafe-eval'",
+                "'unsafe-inline'"
+              ],
         'style-src': ["'self'", 'https://fonts.googleapis.com/', "'unsafe-inline'"]
       },
       {
