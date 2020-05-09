@@ -107,7 +107,8 @@ const Amount: React.FC<RouteComponentProps & {
     hasFixedDenoms ? changeFixedAmount(delta) : changeVariableAmount(delta);
     setInputDirty(false);
     focusInput();
-    tracking.trackEvent({ action: 'changedAmount', method: delta > 0 ? 'increment' : 'decrement' });
+    const method = delta > 0 ? 'increment' : 'decrement';
+    tracking.trackEvent({ action: 'changedAmount', method, gaAction: `changedAmount:${method}` });
   };
   const shakeInput = (): void => {
     setInputError(true);
@@ -126,7 +127,7 @@ const Amount: React.FC<RouteComponentProps & {
   const handleInput = (input: string): void => {
     const stringValue = input.replace(/[^\d.-]/g, '');
     const newAmount = parseFloat(Number(stringValue).toFixed(precision));
-    tracking.trackEvent({ action: 'changedAmount', method: 'type' });
+    tracking.trackEvent({ action: 'changedAmount', method: 'type', gaAction: 'changedAmount:type' });
     if (newAmount <= maxAmount) {
       const correctedValue = enforcePrecision(stringValue);
       if (correctedValue !== stringValue) shakeInput();

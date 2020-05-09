@@ -2,7 +2,7 @@ import track, { Options } from 'react-tracking';
 import ReactGA from 'react-ga';
 import { dispatchAnalyticsEvent } from './browser';
 
-ReactGA.initialize('UA-24163874-24', {
+ReactGA.initialize(process.env.GA_UA as string, {
   debug: true,
   gaAddress: 'https://www.google-analytics.com/analytics.js',
   titleCase: false
