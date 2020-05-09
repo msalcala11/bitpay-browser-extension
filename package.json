@@ -11,7 +11,6 @@
     "yarn": ">= 1.0.0"
   },
   "scripts": {
-    "postinstall": "cp .env.defaults .env.development",
     "dev:chrome": "cross-env NODE_ENV=development cross-env TARGET_BROWSER=chrome webpack --watch",
     "dev:firefox": "cross-env NODE_ENV=development cross-env TARGET_BROWSER=firefox webpack --watch",
     "dev:opera": "cross-env NODE_ENV=development cross-env TARGET_BROWSER=opera webpack --watch",
