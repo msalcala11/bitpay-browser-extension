@@ -38,7 +38,11 @@ const Shop: React.FC<{ directory: Directory; merchants: Merchant[]; location: an
   const handleClick = (merchant?: Merchant): void => {
     location.state = { scrollTop: ref.current?.scrollTop as number, searchVal };
     if (merchant && getGiftCardDiscount(merchant)) {
-      tracking.trackEvent({ action: 'clickedGiftCardPromo', ...getPromoEventParams(merchant) });
+      tracking.trackEvent({
+        action: 'clickedGiftCardPromo',
+        ...getPromoEventParams(merchant),
+        gaAction: `clickedGiftCardPromo:${merchant.name}`
+      });
     }
   };
   const MerchantItem: React.FC<{ merchant: Merchant }> = ({ merchant }) => (

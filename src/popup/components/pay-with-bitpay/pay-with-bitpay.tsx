@@ -107,10 +107,12 @@ const PayWithBitpay: React.FC<Partial<RouteComponentProps> & {
       return;
     }
     const giftCard = await redeemGiftCard(unredeemedGiftCard);
+    const transactionCurrency = giftCard.invoice?.transactionCurrency;
     tracking.trackEvent({
       action: 'purchasedGiftCard',
+      gaAction: `purchasedGiftCard:${cardConfig.name}:${transactionCurrency}`,
       brand: cardConfig.name,
-      transactionCurrency: giftCard.invoice?.transactionCurrency,
+      transactionCurrency,
       ...(cardConfig.discounts && cardConfig.discounts[0] && { ...getGiftCardPromoEventParams(cardConfig) })
     });
     const finalGiftCard = {
