@@ -33,13 +33,8 @@ export function dispatchEvent(event: { [key: string]: string }): void {
 }
 
 export function sendEventToGa(event: { [key: string]: string }): void {
-  if (event && event.isPageview) {
-    console.log('logging pageview');
-    ReactGA.pageview(event.pathname);
-  }
-  if (event && event.action) {
-    console.log('logging action');
-    ReactGA.event({ category: event.category, action: event.action });
-  }
   console.log('event', event);
+  event.isPageview
+    ? ReactGA.pageview(event.pathname)
+    : ReactGA.event({ category: event.category, action: event.action });
 }
