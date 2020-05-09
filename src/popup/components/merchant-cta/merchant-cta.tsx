@@ -13,7 +13,7 @@ const MerchantCta: React.FC<{ merchant?: Merchant; slimCTA: boolean }> = ({ merc
   const hasDiscount = !!(merchant && getDiscount(merchant));
   const hasGiftCardDiscount = !!(merchant && getGiftCardDiscount(merchant));
   useEffect(() => {
-    if (!merchant) return;
+    if (!merchant || !hasGiftCardDiscount) return;
     tracking.trackEvent({
       action: 'presentedWithGiftCardPromo',
       ...getPromoEventParams(merchant),
