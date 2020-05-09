@@ -10,7 +10,7 @@ const SearchBar: React.FC<any> = ({ output, value }) => {
   const [analyticsSubject] = useState(new Subject());
   useEffect(() => {
     analyticsSubject.pipe(debounceTime(1000)).subscribe(query => {
-      tracking.trackEvent({ action: 'searched', query });
+      tracking.trackEvent({ action: 'searched', query, gaAction: `searched:${query}` });
     });
   }, [analyticsSubject, tracking]);
   const onChange = (e: React.FormEvent<HTMLInputElement>): void => {

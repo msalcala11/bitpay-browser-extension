@@ -25,7 +25,7 @@ const CodeBox: React.FC<{ code: string; label: string }> = ({ code, label }) => 
     copyUtil(code);
     if (copied) return;
     setCopied(true);
-    tracking.trackEvent({ action: 'copiedValue', label });
+    tracking.trackEvent({ action: 'copiedValue', label, gaAction: `copiedValue:${label}` });
     await wait(1500);
     if (mountedRef.current) setCopied(false);
   }, [copied, code, label, tracking]);

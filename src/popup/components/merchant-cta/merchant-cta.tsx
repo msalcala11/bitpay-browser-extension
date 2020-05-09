@@ -38,7 +38,13 @@ const MerchantCta: React.FC<{ merchant?: Merchant; slimCTA: boolean }> = ({ merc
           </div>
           <Link
             to={{ pathname: ctaPath, state: { merchant, cardConfig: merchant.giftCards[0] } }}
-            onClick={(): void => tracking.trackEvent({ action: 'clickedMerchantWalletCta', merchant: merchant.name })}
+            onClick={(): void =>
+              tracking.trackEvent({
+                action: 'clickedMerchantWalletCta',
+                merchant: merchant.name,
+                gaAction: `clickedMerchantWalletCta:${merchant.name}`
+              })
+            }
           >
             {merchant.hasDirectIntegration ? <>Learn More</> : <>Buy Now</>}
           </Link>

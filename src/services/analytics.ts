@@ -1,4 +1,4 @@
-import track from 'react-tracking';
+import track, { Options } from 'react-tracking';
 import ReactGA from 'react-ga';
 import { dispatchAnalyticsEvent } from './browser';
 
@@ -16,22 +16,31 @@ function getSafePathname(pathname: string): string {
   return pathname.startsWith('/card') ? `${safeParts.join('/')}` : pathname;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function trackComponent(component: React.FC<any>, eventProperties: any = {}): React.FC<any> {
+export function trackComponent(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  component: React.FC<any>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  eventProperties: any = {},
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  options: Options<Partial<any>> = {}
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+): React.FC<any> {
   return track(
     props => ({
       ...eventProperties,
       ...(props.location && props.location.pathname && { pathname: getSafePathname(props.location.pathname) })
     }),
-    eventProperties.page ? { dispatchOnMount: true } : {}
+    eventProperties.page ? { ...options, dispatchOnMount: true } : { ...options }
   )(component);
 }
 
 export function dispatchEvent(event: { [key: string]: string }): void {
+  console.log('event', event);
   dispatchAnalyticsEvent({ ...event, category: 'widget' });
 }
 
 export function sendEventToGa(event: { [key: string]: string }): void {
+  console.log('viewedPage', event.action === 'viewedPage');
   event.action === 'viewedPage'
     ? ReactGA.pageview(event.pathname)
     : ReactGA.event({ category: event.category, action: event.gaAction || event.action });

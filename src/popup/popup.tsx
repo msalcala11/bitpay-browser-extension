@@ -258,6 +258,6 @@ export default track(
   {},
   {
     dispatch: event => dispatchEvent(event),
-    process: componentTrackingData => (componentTrackingData.page ? { event: 'viewedPage' } : null)
+    process: componentTrackingData => (componentTrackingData.page ? { action: 'viewedPage' } : null)
   }
 )(Popup);

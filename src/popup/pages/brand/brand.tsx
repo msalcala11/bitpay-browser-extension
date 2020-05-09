@@ -19,18 +19,23 @@ const Brand: React.FC<RouteComponentProps> = ({ location }) => {
   const [textExpanded, setTextExpanded] = useState(initiallyExpanded);
   const [pageHeight, setPageHeight] = useState(0);
   const ctaHeight = 125;
+  const getEventParams = (action: string): { action: string; gaAction: string; merchant: string } => ({
+    action,
+    gaAction: `${action}:${merchant.name}`,
+    merchant: merchant.name
+  });
   const expandText = (): void => {
     setTextExpanded(true);
-    tracking.trackEvent({ action: 'expandedText' });
+    tracking.trackEvent(getEventParams('expandedText'));
   };
   const launchMerchantWebsite = (): void => {
     goToPage(merchant.link);
-    tracking.trackEvent({ action: 'launchedMerchantWebsite' });
+    tracking.trackEvent(getEventParams('launchedMerchantWebsite'));
   };
   const handleMerchantCtaClick = (): void => {
     if (!merchant.cta) return;
     goToPage(merchant.cta.link);
-    tracking.trackEvent({ action: 'clickedMerchantCta', merchant: merchant.name });
+    tracking.trackEvent(getEventParams('clickedMerchantCta'));
   };
   useEffect((): void => {
     if (!ref.current) return;
