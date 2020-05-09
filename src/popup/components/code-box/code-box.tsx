@@ -1,9 +1,9 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
+import { useTracking } from 'react-tracking';
 import { motion } from 'framer-motion';
 import copyUtil from '../../../services/copy-util';
 import { wait } from '../../../services/utils';
 import './code-box.scss';
-import { useTracking } from 'react-tracking';
 
 const animateLabels = {
   base: {
