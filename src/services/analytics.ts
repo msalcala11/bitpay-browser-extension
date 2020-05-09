@@ -4,10 +4,10 @@ import { dispatchAnalyticsEvent } from './browser';
 
 ReactGA.initialize('UA-24163874-24', {
   debug: true,
-  gaAddress: 'https://www.google-analytics.com/analytics.js' // 'https://ssl.google-analytics.com/ga.js'
+  gaAddress: 'https://www.google-analytics.com/analytics.js',
+  titleCase: false
 });
 ReactGA.ga('set', 'checkProtocolTask', null);
-ReactGA.pageview('/index.html');
 
 function getSafePathname(pathname: string): string {
   const parts = pathname.split('/');
@@ -21,7 +21,8 @@ export function trackComponent(component: React.FC<any>, eventProperties: any = 
   return track(
     props => ({
       ...eventProperties,
-      ...(props.location && props.location.pathname && { pathname: getSafePathname(props.location.pathname) })
+      ...(props.location && props.location.pathname && { pathname: getSafePathname(props.location.pathname) }),
+      isPageview: eventProperties.page
     }),
     eventProperties.page ? { dispatchOnMount: true } : {}
   )(component);
@@ -32,7 +33,7 @@ export function dispatchEvent(event: { [key: string]: string }): void {
 }
 
 export function sendEventToGa(event: { [key: string]: string }): void {
-  if (event && event.page) {
+  if (event && event.isPageview) {
     console.log('logging pageview');
     ReactGA.pageview(event.pathname);
   }
