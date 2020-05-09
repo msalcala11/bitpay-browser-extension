@@ -2,39 +2,12 @@ import track from 'react-tracking';
 import ReactGA from 'react-ga';
 import { dispatchAnalyticsEvent } from './browser';
 
-// github.com/react-ga/react-ga/issues/379
-
-// new Promise(resolve => {
-//   (function(i, s, o, g, r, a, m) {
-//     i.GoogleAnalyticsObject = r;
-//     (i[r] =
-//       i[r] ||
-//       function() {
-//         (i[r].q = i[r].q || []).push(arguments);
-//       }),
-//       (i[r].l = 1 * new Date());
-//     (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
-//     a.async = 1;
-//     a.src = g;
-//     a.addEventListener('load', resolve);
-//     m.parentNode.insertBefore(a, m);
-//   })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
-//   window.ga('create', 'UA-24163874-24', 'auto');
-//   window.ga('send', 'pageview');
-// }).then(() => {
-//   ReactGA.initialize('UA-24163874-24', {
-//     standardImplementation: true
-//   });
-//   // ReactGA.pageview('/index.html');
-// });
-
 ReactGA.initialize('UA-24163874-24', {
   debug: true,
   gaAddress: 'https://www.google-analytics.com/analytics.js' // 'https://ssl.google-analytics.com/ga.js'
 });
 ReactGA.ga('set', 'checkProtocolTask', null);
 ReactGA.pageview('/index.html');
-// console.log('ReactGA', ReactGA);
 
 function getSafePathname(pathname: string): string {
   const parts = pathname.split('/');
