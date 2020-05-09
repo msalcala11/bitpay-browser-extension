@@ -48,7 +48,11 @@ const Card: React.FC<RouteComponentProps & {
   const launchClaimLink = (): void => {
     const url = cardConfig.defaultClaimCodeType === 'link' ? (card.claimLink as string) : redeemUrl;
     launchNewTab(url);
-    tracking.trackEvent({ action: 'clickedRedeemButton' });
+    tracking.trackEvent({
+      action: 'clickedRedeemButton',
+      gaAction: `clickedRedeemButton:${cardConfig.name}`,
+      brand: cardConfig.name
+    });
   };
   const shouldShowRedeemButton = (): boolean => !!(cardConfig.redeemUrl || cardConfig.defaultClaimCodeType === 'link');
   const updateCard = async (cardToUpdate: GiftCard): Promise<void> => {

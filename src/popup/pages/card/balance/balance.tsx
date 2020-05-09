@@ -45,7 +45,7 @@ const Balance: React.FC<RouteComponentProps & {
       balanceHistory: [...(card.balanceHistory || []), { date: new Date().toISOString(), amount }]
     };
     await updateGiftCard(updatedCard);
-    tracking.trackEvent({ action: 'changedBalance', type: updateType });
+    tracking.trackEvent({ action: 'changedBalance', type: updateType, gaAction: `changedBalance:${updateType}` });
     history.goBack();
   };
   const handleMenuClick = async (option: string): Promise<void> => {
