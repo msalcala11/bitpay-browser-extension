@@ -36,7 +36,11 @@ const Category: React.FC<RouteComponentProps & { merchants: Merchant[] }> = ({ l
   );
   const handleIntersection = (merchant: Merchant) => (event: IntersectionObserverEntry): void => {
     if (event.isIntersecting)
-      tracking.trackEvent({ action: 'presentedWithGiftCardPromo', ...getPromoEventParams(merchant) });
+      tracking.trackEvent({
+        action: 'presentedWithGiftCardPromo',
+        ...getPromoEventParams(merchant),
+        gaAction: `presentedWithGiftCardPromo:${merchant.name}`
+      });
   };
   const resizeSwitch = (length: number): number => {
     if (length > 3) return 100;

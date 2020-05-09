@@ -21,8 +21,7 @@ export function trackComponent(component: React.FC<any>, eventProperties: any = 
   return track(
     props => ({
       ...eventProperties,
-      ...(props.location && props.location.pathname && { pathname: getSafePathname(props.location.pathname) }),
-      isPageview: eventProperties.page
+      ...(props.location && props.location.pathname && { pathname: getSafePathname(props.location.pathname) })
     }),
     eventProperties.page ? { dispatchOnMount: true } : {}
   )(component);
@@ -33,8 +32,7 @@ export function dispatchEvent(event: { [key: string]: string }): void {
 }
 
 export function sendEventToGa(event: { [key: string]: string }): void {
-  console.log('event', event);
-  event.isPageview
+  event.action === 'viewedPage'
     ? ReactGA.pageview(event.pathname)
-    : ReactGA.event({ category: event.category, action: event.action });
+    : ReactGA.event({ category: event.category, action: event.gaAction || event.action });
 }

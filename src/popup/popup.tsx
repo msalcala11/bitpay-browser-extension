@@ -257,6 +257,7 @@ const Popup: React.FC = () => {
 export default track(
   {},
   {
-    dispatch: event => dispatchEvent(event)
+    dispatch: event => dispatchEvent(event),
+    process: componentTrackingData => (componentTrackingData.page ? { event: 'viewedPage' } : null)
   }
 )(Popup);
