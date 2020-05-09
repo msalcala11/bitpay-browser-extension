@@ -232,4 +232,4 @@ const Amount: React.FC<RouteComponentProps & {
   );
 };
 
-export default trackComponent(Amount, { page: 'Amount' });
+export default trackComponent(Amount, { page: 'amount' });

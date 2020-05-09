@@ -42,6 +42,6 @@ export function dispatchEvent(event: { [key: string]: string }): void {
 export function sendEventToGa(event: { [key: string]: string }): void {
   console.log('viewedPage', event.action === 'viewedPage');
   event.action === 'viewedPage'
-    ? ReactGA.pageview(event.pathname)
+    ? ReactGA.pageview(event.pathname, undefined, event.page)
     : ReactGA.event({ category: event.category, action: event.gaAction || event.action });
 }
