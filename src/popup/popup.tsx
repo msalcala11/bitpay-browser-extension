@@ -20,6 +20,7 @@ import {
 } from '../services/merchant';
 import Amount from './pages/amount/amount';
 import Payment from './pages/payment/payment';
+import Phone from './pages/phone/phone';
 import { get } from '../services/storage';
 import { GiftCard, CardConfig } from '../services/gift-card.types';
 import { sortByDescendingDate } from '../services/gift-card';
@@ -222,6 +223,7 @@ const Popup: React.FC = () => {
                 />
               )}
             />
+            <Route path="/phone" render={(props): JSX.Element => <Phone phone={undefined} {...props} />} />
             <Route
               path="/shop"
               render={(props): JSX.Element => <Shop directory={directory} merchants={merchants} {...props} />}
