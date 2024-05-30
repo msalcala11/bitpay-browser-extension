@@ -4,7 +4,7 @@ const pkg = require('../../package.json');
 const csp = require('../../csp');
 
 const manifestInput = {
-  manifest_version: 2,
+  manifest_version: 3,
   name: 'Pay with BitPay',
   version: pkg.version,
 
@@ -19,7 +19,8 @@ const manifestInput = {
   homepage_url: 'https://github.com/bitpay/bitpay-browser-extension',
   short_name: 'Pay with BitPay',
 
-  permissions: ['activeTab', 'storage', 'http://*/*', 'https://*/*'],
+  permissions: ['activeTab', 'storage'],
+  host_permissions: ['http://*/*', 'https://*/*'],
   content_security_policy: csp.cspString,
 
   '__chrome|firefox__author': 'bitpay',
@@ -68,7 +69,13 @@ const manifestInput = {
     }
   ],
 
-  web_accessible_resources: ['popup.html']
+  // web_accessible_resources: ['popup.html']\
+  web_accessible_resources: [
+    {
+      resources: ['popup.html'],
+      matches: ['*://*/*']
+    }
+  ]
 };
 
 module.exports = manifestInput;
