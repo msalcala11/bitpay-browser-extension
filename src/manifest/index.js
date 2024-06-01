@@ -3,6 +3,7 @@
 const pkg = require('../../package.json');
 const csp = require('../../csp');
 
+console.log('csp', csp);
 const manifestInput = {
   manifest_version: 3,
   name: 'Pay with BitPay',
@@ -21,7 +22,11 @@ const manifestInput = {
 
   permissions: ['activeTab', 'storage'],
   host_permissions: ['http://*/*', 'https://*/*'],
-  content_security_policy: csp.cspString,
+  // content_security_policy: csp.cspString,
+
+  content_security_policy: {
+    extension_pages: csp.cspString
+  },
 
   '__chrome|firefox__author': 'bitpay',
   __opera__developer: {
@@ -57,9 +62,14 @@ const manifestInput = {
   //   __chrome__chrome_style: false
   // },
 
+  // background: {
+  //   scripts: ['js/background.bundle.js'],
+  //   '__chrome|opera__persistent': false
+  // },
+
   background: {
-    scripts: ['js/background.bundle.js'],
-    '__chrome|opera__persistent': false
+    service_worker: 'js/background.bundle.js',
+    type: 'module'
   },
 
   content_scripts: [
